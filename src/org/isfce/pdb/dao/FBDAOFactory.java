@@ -28,5 +28,14 @@ public class FBDAOFactory extends DAOFactory {
 	protected void dispatchException(Exception e, String detail) throws InstallationException {
 		throw new InstallationException(" Problème ");
 	}
+	
+	private IPieceDao daoPiece = null;
+	
+	@Override 
+	public IPieceDao getPieceDAO() {
+		if (daoPiece == null)
+			daoPiece = new SQLPieceDao(this);
+		return daoPiece;
+	}
 
 }
