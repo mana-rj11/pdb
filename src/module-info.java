@@ -7,6 +7,7 @@ module pdb2526 {
 	requires transitive javafx.graphics;
 	requires java.base;
 	requires lombok;
+	requires org.junit.jupiter.api;
 	
 	// opens org.isfce.pdb.view to javafx.fxml;
 	//opens org.isfce.pdb to org.junit.platform.commons;
