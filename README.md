@@ -100,11 +100,13 @@ dao.getFromID(1)  /  dao.getListe(null)
 
 ## 📅 Journal de progression
 
-### Semaine 1 — Initial commit
-- Mise en place du projet Eclipse
-- Configuration Git / GitHub
+### 1) Initial commit
+- Configuration JavaFX, Lombok..
+- Pull le projet du prof de son compte GitLab
+- Mise en place du projet sur Eclipse
+- Configuration GitLab / GitHub 
 
-### Semaine 2 — Cours du 25 mars 2026 (prof)
+### 2) Cours du 25 mars 2026 (prof)
 **Théorie :** Design Pattern DAO + Abstract Factory  
 **Code fourni par le prof :**
 - `IDAO.java` — interface générique `<T, K>`
@@ -114,8 +116,8 @@ dao.getFromID(1)  /  dao.getListe(null)
 - `SQLTypePieceDao.java` — implémentation SQL (`getFromID`, `getListe`)
 - `TypePiece.java` — modèle avec Lombok `@Data @AllArgsConstructor`
 
-### Semaine 2 — Travail personnel (après le cours)
-**Construction de la couche Piece (5 étapes) :**
+### 3) Travail personnel (après le cours)
+**Construction de la couche Piece (en 5 étapes) :**
 1. `Piece.java` — modèle avec 6 attributs dont composition vers `TypePiece`
 2. `IPieceDao.java` — interface `extends IDAO<Piece, Integer>`
 3. `SQLPieceDao.java` — implémentation avec `buildPiece(ResultSet rs)`
@@ -182,7 +184,7 @@ Dans Eclipse :
 
 ---
 
-## 🔜 Prochaines étapes
+## 🔜 Prochaines étapes.. (sûrement)
 
 - [ ] IHM avec JavaFX + FXML
 - [ ] Couche Vue (contrôleurs FXML)
@@ -190,4 +192,4 @@ Dans Eclipse :
 
 ---
 
-*Projet réalisé dans le cadre du cours SGBD — ISFCE*
+*Readme réalisé dans le cadre du cours SGBD — ISFCE*
