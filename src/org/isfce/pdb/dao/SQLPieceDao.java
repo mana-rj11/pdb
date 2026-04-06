@@ -44,7 +44,7 @@ public class SQLPieceDao implements IPieceDao {
 	
 	/**
 	 * Construire un Objet Piece à partir du ResultSet courant
-	 
+	 */
 	private Piece buildPiece(ResultSet rs) throws SQLException {
 		// ici on récupère le TypePiece via son DAO
 		ITypePieceDao daoTypePiece = factory.getTypePieceDAO();
@@ -63,7 +63,7 @@ public class SQLPieceDao implements IPieceDao {
 		}
 		return null;
 	}
-	*/
+	
 	
 	@Override
 	public Optional<Piece> getFromID(Integer id) {
