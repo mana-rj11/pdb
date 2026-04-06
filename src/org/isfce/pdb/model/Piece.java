@@ -1,18 +1,22 @@
 package org.isfce.pdb.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import java.math.BigDecimal;
 
-@AllArgsConstructor
-@Data
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
+
+@Builder
+@ToString(exclude = {"typePiece", "installation", "description"})
+@EqualsAndHashCode
+@Getter
 public class Piece {
-
-	
-	private final int num;
-	private final String nom;
-	private final String description;
-	private final double etage;
-	private final TypePiece type;	// objet TypePiece complet!
-	private final int installation;
+	private Integer id;
+	private String nom;
+	private String description;
+	private BigDecimal etage;		// <- BigDecimal au lieu de (double)
+	private TypePiece typePiece;	// < renommé type -> typePiece
+	private final Integer installation;
 
 }
