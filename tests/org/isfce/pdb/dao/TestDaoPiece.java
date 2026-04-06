@@ -4,6 +4,7 @@ package org.isfce.pdb.dao;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.math.BigDecimal;
 import java.sql.SQLException;
 
 import org.isfce.pdb.databases.connexion.ConnexionFromFile;
@@ -23,8 +24,16 @@ public class TestDaoPiece {
 	// TypePiece attendu pour les tests
 	static TypePiece typeSalon = new TypePiece("SALON", "Salon", false);
 	
-	// Piece attendue pour nos tests
-	static Piece pieceAttendue = new Piece(1, "SALON_MAB", "Mon Salon", 1.0, typeSalon, 1);
+	// Piece attendue pour nos tests - builder utilisé et correspondre aux nouvelles données du script
+	static TypePiece tp = new TypePiece("SALON", "Salon", false);
+	static Piece p = Piece.builder()
+			.id(1)
+			.nom("SALON")
+			.description("Salon principal")
+			.etage(new BigDecimal("0.0"))
+			.typePiece(tp)
+			.installation(3)
+			.build();
 	
 	@BeforeAll
 	static void setUpBeforeClass() throws Exception {
@@ -52,14 +61,14 @@ public class TestDaoPiece {
 	void testGetFromId() throws SQLException {
 		var oObj = dao.getFromID(1);
 		assertTrue(oObj.isPresent());
-		assertEquals(pieceAttendue, oObj.get());
+		assertEquals(tp, oObj.get());
 	}
 	
 	@Test 
 	void testGetListe() throws SQLException {
 		var liste = dao.getListe(null);
 		assertTrue(liste.size() > 0);
-		assertEquals(pieceAttendue, liste.get(0));
+		assertEquals(tp, liste.get(0));
 	}
 	
 }
