@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.isfce.pdb.model.Piece;
+import org.isfce.pdb.model.TypePiece;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -39,9 +40,11 @@ public class SQLPieceDao implements IPieceDao {
 		this.connexion = factory.getConnection();
 	}
 	
+	// Plus utulisée avec le nouveau code 
+	
 	/**
 	 * Construire un Objet Piece à partir du ResultSet courant
-	 */
+	 
 	private Piece buildPiece(ResultSet rs) throws SQLException {
 		// ici on récupère le TypePiece via son DAO
 		ITypePieceDao daoTypePiece = factory.getTypePieceDAO();
@@ -60,6 +63,7 @@ public class SQLPieceDao implements IPieceDao {
 		}
 		return null;
 	}
+	*/
 	
 	@Override
 	public Optional<Piece> getFromID(Integer id) {
@@ -68,7 +72,16 @@ public class SQLPieceDao implements IPieceDao {
 			ps.setInt(1, id);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
-				obj = buildPiece(rs);
+				String typeP = rs.getString("FKTYPE_PIE");
+				TypePiece tp = factory.getTypePieceDAO().getFromID(typeP).get();
+				obj = Piece.builder()
+						.id(id)
+						.nom(rs.getString("NOM_PIE"))
+						.description(rs.getString("DESCRIPTION_PIE"))
+						.etage(rs.getBigDecimal("ETAGE_PIE"))
+						.typePiece(tp)
+						.installation(rs.getInt("FKINSTALLATION_PIE"))
+						.build();		
 				log.debug("Object Piece is created : " + obj);
 			}
 		} catch (SQLException e) {
