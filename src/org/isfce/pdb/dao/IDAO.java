@@ -22,6 +22,7 @@ public interface IDAO<T,K> {
 	{
 		throw new UnsupportedOperationException();
 	}
+	
 
 	
 	/**

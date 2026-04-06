@@ -15,6 +15,12 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class SQLTypePieceDao implements ITypePieceDao {
+	
+	private static String SQL_INSERT = """
+			INSERT INTO TTYPE_PIECE (CODE_TYP, NOM_TYP, HUMIDE_TYP)
+			VALUES (?,?,?)
+			""";
+	
 	private static String SQL_GET_FROM_ID="""
 			select t.CODE_TYP,t.NOM_TYP,t.HUMIDE_TYP from TTYPE_PIECE t
 			where t.CODE_TYP= ?
@@ -23,10 +29,11 @@ public class SQLTypePieceDao implements ITypePieceDao {
 			select t.CODE_TYP,t.NOM_TYP,t.HUMIDE_TYP from TTYPE_PIECE t
 			order by t.CODE_TYP
 			""";
-	//private DAOFactory factory; //pas besoin pour les TypePiece
+	private DAOFactory factory; //pas besoin pour les TypePiece
 	private Connection connexion;
 
 	public SQLTypePieceDao(DAOFactory factory) {
+		this.factory = factory;
 		this.connexion = factory.getConnection();
 	}
 
@@ -61,5 +68,24 @@ public class SQLTypePieceDao implements ITypePieceDao {
 			};
 		return liste;
 	}
+	
+	@Override
+	public TypePiece insert(TypePiece obj) throws Exception {
+		try (PreparedStatement ps = connexion.prepareStatement(SQL_INSERT)) {
+			ps.setString(1, obj.getCode().trim().toUpperCase());
+			ps.setString(2, obj.getNom().trim());
+			ps.setBoolean(3, obj.isHumide());
+			ps.executeUpdate();
+			if (!this.connexion.getAutoCommit())
+				this.connexion.commit();
+			log.debug("Ajout d'un TypePiece: " + obj);
+		} catch (SQLException e) {
+			log.error("Insertion non validée: " + e);
+			if (!this.connexion.getAutoCommit())
+				this.connexion.rollback();
+			this.factory.dispatchException(e, "TTYPE_PIECE");
+		}
+		return obj;
 
+}
 }

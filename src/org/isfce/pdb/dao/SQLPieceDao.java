@@ -48,14 +48,14 @@ public class SQLPieceDao implements IPieceDao {
 		var typePiece = daoTypePiece.getFromID(rs.getString("FKTYPE_PIE"));
 		
 		if (typePiece.isPresent()) {
-			return new Piece(
-				rs.getInt("NUM_PIE"),
-				rs.getString("NOM_PIE"),
-				rs.getString("DESCRIPTION_PIE"),
-				rs.getDouble("ETAGE_PIE"),
-				typePiece.get(),
-				rs.getInt("FKINSTALLATION_PIE")
-			);
+			return Piece.builder()
+				.id(rs.getInt("NUM_PIE"))
+				.nom(rs.getString("NOM_PIE"))
+				.description(rs.getString("DESCRIPTION_PIE"))
+				.etage(rs.getBigDecimal("ETAGE_PIE"))
+				.typePiece(typePiece.get())
+				.installation(rs.getInt("FKINSTALLATION_PIE"))
+				.build();
 			
 		}
 		return null;
@@ -92,4 +92,5 @@ public class SQLPieceDao implements IPieceDao {
 		}
 		return liste;
 	}
-}
+	
+	}
