@@ -130,6 +130,37 @@ dao.getFromID(1)  /  dao.getListe(null)
 - `OVERRIDING SYSTEM VALUE` pour insérer un ID explicite sur une colonne `GENERATED ALWAYS AS IDENTITY` en Firebird
 - Ordre des DELETE dans le script SQL : enfants avant parents (contrainte FK)
 
+### 4) Cours du 2 avril 2026 (prof)
+**Théorie :** Gestion des exceptions métier + méthode `insert()` + Lombok `@Builder`
+ 
+**Code vu en cours :**
+- `insert()` dans `SQLTypePieceDao` — implémentation du **C** de CRUD avec `executeUpdate()`, `commit()`, `rollback()`
+- `dispatchException()` dans `FBDAOFactory` — traduction des codes d'erreur Firebird en exceptions Java
+- `PKException.java` — exception pour clé primaire dupliquée (code Firebird `335544665`)
+- `CheckException.java` — exception pour contrainte CHECK violée (code Firebird `335544347`)
+- `Piece.java` refactorisé — `@Builder`, `BigDecimal` pour l'étage, annotations Lombok précises
+- `testInsert()` dans `TestDaoTypePiece` — test des cas d'erreur avec `assertThrows`
+- `scriptInitDBTest.sql` — ajout de `ALTER TABLE TPIECE ALTER NUM_PIE restart with 1`
+ 
+**Points techniques importants :**
+- `@Builder` au lieu de `@Data` : contrôle fin de `equals()` et construction fluente
+- `BigDecimal` au lieu de `double` : précision numérique exacte
+- `dispatchException()` : pattern anti-corruption — l'application ne voit jamais les codes SQL bruts
+- `restart with 1` : remet le compteur auto-incrément à zéro après chaque DELETE pour des tests prévisibles
+- `assertThrows(X.class, lambda)` : vérifie qu'une exception est bien levée
+ 
+### 5) Travail personnel (après le cours du 2 avril)
+**Mise à jour du projet pour suivre le cours :**
+1. `Piece.java` — refactorisé avec `@Builder`, `@Getter`, `@EqualsAndHashCode`, `@ToString(exclude=...)`, `BigDecimal`
+2. `PKException.java` — créée dans `org.isfce.pdb.exceptions`
+3. `CheckException.java` — créée dans `org.isfce.pdb.exceptions`
+4. `FBDAOFactory.java` — `dispatchException()` mis à jour avec switch sur codes Firebird
+5. `SQLTypePieceDao.java` — ajout `insert()` + `SQL_INSERT` + attribut `factory`
+6. `SQLPieceDao.java` — migration vers `Piece.builder()` dans `getFromID()`
+7. `scriptInitDBTest.sql` — ajout `restart with 1`, ajout type `SAM`, INSERT sur une seule ligne
+8. `TestDaoTypePiece.java` — ajout `testInsert()` **3/3 ✓**
+9. `TestDaoPiece.java` — mis à jour avec builder **1/1 ✓**
+
 ---
 
 ## ⚙️ Configuration requise
@@ -181,11 +212,21 @@ Dans Eclipse :
 | **Optional\<T\>** | Évite les NullPointerException sur getFromID |
 | **OVERRIDING SYSTEM VALUE** | Impose un ID sur une colonne auto-incrémentée Firebird |
 | **Modulepath vs Classpath** | JavaFX et JUnit 5 doivent être sur le Modulepath |
+| **@Builder** | Construction fluente — plus lisible qu'un constructeur |
+| **BigDecimal** | Précision exacte pour les valeurs numériques |
+| **PKException** | Traduit l'erreur Firebird 335544665 (doublon de clé primaire) |
+| **CheckException** | Traduit l'erreur Firebird 335544347 (contrainte CHECK violée) |
+| **dispatchException()** | Pattern anti-corruption — traduit SQL brut en exceptions métier |
+| **restart with 1** | Remet le compteur auto-incrément à zéro après DELETE |
+| **assertThrows** | Vérifie qu'une exception est bien levée dans les tests |
+| **OVERRIDING SYSTEM VALUE** | Impose un ID sur une colonne auto-incrémentée Firebird |
+| **Modulepath vs Classpath** | JavaFX et JUnit 5 doivent être sur le Modulepath |
 
 ---
 
 ## 🔜 Prochaines étapes.. (sûrement)
 
+- [ ] Cahier de charges du projet reçu par le prof..?
 - [ ] IHM avec JavaFX + FXML
 - [ ] Couche Vue (contrôleurs FXML)
 - [ ] Connexion Vue ↔ DAO
