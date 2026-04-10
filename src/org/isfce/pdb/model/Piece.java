@@ -5,12 +5,14 @@ import java.math.BigDecimal;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 @Builder
-@ToString(exclude = {"typePiece", "installation", "description"})
+@ToString
 @EqualsAndHashCode
 @Getter
+@Setter
 public class Piece {
 	private Integer id;
 	private String nom;
