@@ -161,6 +161,28 @@ dao.getFromID(1)  /  dao.getListe(null)
 8. `TestDaoTypePiece.java` — ajout `testInsert()` **3/3 ✓**
 9. `TestDaoPiece.java` — mis à jour avec builder **1/1 ✓**
 
+### 6) Cours du 8 avril 2026 (code récupéré sur GitLab)
+**Théorie :** `insert()` pour Piece + `RETURNING` Firebird + `assert` + `@Setter`
+
+**Code vu en cours :**
+- `Piece.java` — ajout `@Setter` pour permettre l'injection de l'ID après insert
+- `@ToString` sans `exclude` — pour voir tous les champs dans les logs
+- `SQLPieceDao.java` — `insert()` avec `RETURNING NUM_PIE` et `executeQuery()`
+- `assert` — précondition : l'objet ne doit pas avoir d'ID avant insertion
+- `TestDaoPiece.java` — `testInsert()` + `setScale(1)` sur les `BigDecimal`
+
+**Points techniques importants :**
+- `RETURNING NUM_PIE` — syntaxe Firebird pour récupérer l'ID généré sans 2e requête
+- `executeQuery()` au lieu de `executeUpdate()` car `RETURNING` retourne un `ResultSet`
+- `obj.setId(rs.getInt(1))` — l'objet Java est mis à jour avec l'ID généré
+- `assert` — si l'objet a déjà un ID → `AssertionError` (test ligne 97)
+- `setScale(1)` — force `0.0` au lieu de `0` pour que `BigDecimal.equals()` fonctionne
+
+### 7) Travail personnel (après le cours du 8 avril)
+1. `Piece.java` — ajout `@Setter`, `@ToString` sans `exclude`
+2. `SQLPieceDao.java` — `insert()` avec `RETURNING NUM_PIE`, `assert`, `executeQuery()`
+3. `TestDaoPiece.java` — `testInsert()` + `setScale(1)` **2/2 ✓**
+
 ---
 
 ## ⚙️ Configuration requise
@@ -197,7 +219,7 @@ encoding : UTF8
 Dans Eclipse :
 1. Clic droit sur `tests/org/isfce/pdb/dao/`
 2. **Run As** → **JUnit Test**
-3. Résultat attendu : **4/4 ✓** (2 TypePiece + 2 Piece)
+3. Résultat attendu : **5/5 ✓** (3 TypePiece + 2 Piece)
 
 ---
 
@@ -221,6 +243,14 @@ Dans Eclipse :
 | **assertThrows** | Vérifie qu'une exception est bien levée dans les tests |
 | **OVERRIDING SYSTEM VALUE** | Impose un ID sur une colonne auto-incrémentée Firebird |
 | **Modulepath vs Classpath** | JavaFX et JUnit 5 doivent être sur le Modulepath |
+
+| **NEW** | 
+
+| **@Setter** | Permet d'injecter l'ID généré par Firebird dans l'objet |
+| **setScale(1)** | Normalise les décimales pour que equals() fonctionne |
+| **RETURNING NUM_PIE** | Firebird retourne l'ID généré directement sans 2e requête |
+| **executeQuery()** | Utilisé avec RETURNING car ça retourne un ResultSet |
+
 
 ---
 
