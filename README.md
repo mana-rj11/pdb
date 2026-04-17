@@ -182,6 +182,8 @@ dao.getFromID(1)  /  dao.getListe(null)
 1. `Piece.java` — ajout `@Setter`, `@ToString` sans `exclude`
 2. `SQLPieceDao.java` — `insert()` avec `RETURNING NUM_PIE`, `assert`, `executeQuery()`
 3. `TestDaoPiece.java` — `testInsert()` + `setScale(1)` **2/2 ✓**
+4. `SQLPieceDao.java` — `getListe()` implémentée avec builder + `setScale(1)`
+5. `TestDaoPiece.java` — ajout `testGetListe()` **3/3 ✓**
 
 ---
 
@@ -219,8 +221,7 @@ encoding : UTF8
 Dans Eclipse :
 1. Clic droit sur `tests/org/isfce/pdb/dao/`
 2. **Run As** → **JUnit Test**
-3. Résultat attendu : **5/5 ✓** (3 TypePiece + 2 Piece)
-
+3. Résultat attendu : **6/6 ✓** (3 TypePiece + 3 Piece)
 ---
 
 ## 📌 Points clés à retenir
