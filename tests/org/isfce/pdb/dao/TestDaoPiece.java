@@ -97,4 +97,11 @@ public class TestDaoPiece {
 		assertThrows(AssertionError.class, () -> dao.insert(pn2));
 	}
 	
+	@Test 
+	void testGetListe() throws SQLException {
+		var liste = dao.getListe(null);
+		assertTrue(liste.size() > 0);
+		assertEquals(p, liste.get(0));
+	}
+	
 }

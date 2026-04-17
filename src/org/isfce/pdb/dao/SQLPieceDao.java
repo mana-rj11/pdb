@@ -101,9 +101,17 @@ public class SQLPieceDao implements IPieceDao {
 		try (Statement st = connexion.createStatement()) {
 			ResultSet rs = st.executeQuery(SQL_GET_LISTE);
 			while (rs.next()) {
-				Piece p = buildPiece(rs);
-				if (p != null)
-					liste.add(p);
+				String typeP = rs.getString("FKTYPE_PIE"); // <- getString
+				TypePiece tp = factory.getTypePieceDAO().getFromID(typeP).get();
+				Piece p = Piece.builder()
+						.id(rs.getInt("NUM_PIE"))
+						.nom(rs.getString("NOM_PIE"))
+						.description(rs.getString("DESCRIPTION_PIE"))
+						.etage(rs.getBigDecimal("ETAGE_PIE").setScale(1))
+						.typePiece(tp)
+						.installation(rs.getInt("FKINSTALLATION_PIE"))
+						.build();
+				liste.add(p);
 			}
 		} catch (SQLException e) {
 			log.error(e.getMessage());
