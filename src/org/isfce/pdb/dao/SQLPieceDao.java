@@ -34,7 +34,7 @@ public class SQLPieceDao implements IPieceDao {
 	
 	private static String SQL_INSERT = """
 			INSERT INTO TPIECE (NOM_PIE, DESCRIPTION_PIE, ETAGE_PIE, FKTYPE_PIE, FKINSTALLATION_PIE)
-			VALUES (?,?,?,?,?) RETURNING NUM_PIE
+			VALUES (?,?,?,?,?)
 			""";
 	
 	private Connection connexion;
@@ -122,19 +122,24 @@ public class SQLPieceDao implements IPieceDao {
 	@Override 
 	public Piece insert(Piece obj) throws Exception {
 		assert obj != null && obj.getId() == null : "Lobjet doit exister sans ID";
-		try (PreparedStatement ps = connexion.prepareStatement(SQL_INSERT)) {
+		try (PreparedStatement ps = connexion.prepareStatement(SQL_INSERT,
+										Statement.RETURN_GENERATED_KEYS)) {
 			ps.setString(1, obj.getNom().trim());
 			ps.setString(2, obj.getDescription().trim());
 			ps.setBigDecimal(3, obj.getEtage());
 			ps.setString(4, obj.getTypePiece().getCode());
 			ps.setInt(5, obj.getInstallation());
-			ResultSet rs = ps.executeQuery(); // <- pas excecuteUpdate !
-			if (rs.next()) {
-				obj.setId(rs.getInt(1)); // <- injecte l'ID généré dans l'objet
-				if (!this.connexion.getAutoCommit())
-					this.connexion.commit();
+			int nb = ps.executeUpdate(); // <- executeUpdate car pas de RETURNING 
+			if (nb == 1) {
+				ResultSet rs = ps.getGeneratedKeys(); // <- génère l'ID généré
+				if (rs.next()) {
+					obj.setId(rs.getInt(1)); // <- injecte l'ID généré dans l'objet
+					if (!this.connexion.getAutoCommit())
+						this.connexion.commit();
+				} else
+					log.error("L'insert n'a pas retourné l'ID auto généré");
 			} else
-				log.error("L'insert n'a pas retourné l'ID auto généré");
+				log.error("L'insert n'a pas fonctionné");
 		} catch (SQLException e) {
 			log.error("Insertion non validée: " + e);
 			if (!this.connexion.getAutoCommit())
