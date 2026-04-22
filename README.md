@@ -43,6 +43,7 @@ org.isfce.pdb
 │   ├── SQLTypePieceDao.java    # Implémentation SQL TypePiece
 │   ├── IPieceDao.java          # Interface DAO Piece
 │   └── SQLPieceDao.java        # Implémentation SQL Piece
+│   └── CacheTypePieceDao.java      # Pattern Decorator - cache HashMap pour TypePiece
 │
 ├── model/                      # Couche modèle (classes métier)
 │   ├── TypePiece.java          # Entité TypePiece (code, nom, humide)
@@ -185,6 +186,29 @@ dao.getFromID(1)  /  dao.getListe(null)
 4. `SQLPieceDao.java` — `getListe()` implémentée avec builder + `setScale(1)`
 5. `TestDaoPiece.java` — ajout `testGetListe()` **3/3 ✓**
 
+### 8) Cours du 15 avril 2026 (prof)
+**Théorie :** Pattern Decorator + Cache + RETURN_GENERATED_KEYS JDBC standard
+
+**Code vu en cours :**
+- `CacheTypePieceDao.java` — pattern Decorator avec HashMap, évite les requêtes SQL répétées
+- `FBDAOFactory.java` — `getTypePieceDAO()` retourne maintenant `CacheTypePieceDao(SQLTypePieceDao)`
+- `SQLPieceDao.java` — `insert()` réécrit avec `Statement.RETURN_GENERATED_KEYS` (JDBC standard)
+- Nouveau domaine BD : tables `TSVG`, `TAPPAREIL`, `TINSTALLATION`, `TELEMENT`
+- Début configuration JavaFX : e(fx)clipse + SceneBuilder à installer
+
+**Points techniques importants :**
+- Pattern Decorator : envelopper un objet pour lui ajouter un comportement sans le modifier
+- `RETURN_GENERATED_KEYS` vs `RETURNING` : JDBC standard vs spécifique Firebird
+- `executeUpdate()` + `getGeneratedKeys()` au lieu de `executeQuery()`
+- Lambda `ifPresent((obj) -> cache.put(id, obj))` — ajoute au cache si l'objet existe
+- Le cache n'est pas vidé dans `getListe()` car pas d'Update dans le système
+
+### 9) Travail personnel (après le cours du 15 avril)
+1. `CacheTypePieceDao.java` — créée avec `getFromID`, `getListe`, `insert`
+2. `FBDAOFactory.java` — `getTypePieceDAO()` mis à jour avec `CacheTypePieceDao`
+3. `SQLPieceDao.java` — `insert()` réécrit avec `RETURN_GENERATED_KEYS`
+4. Tests **6/6 ✓**
+
 ---
 
 ## ⚙️ Configuration requise
@@ -245,12 +269,19 @@ Dans Eclipse :
 | **OVERRIDING SYSTEM VALUE** | Impose un ID sur une colonne auto-incrémentée Firebird |
 | **Modulepath vs Classpath** | JavaFX et JUnit 5 doivent être sur le Modulepath |
 
-| **NEW** | 
+| 08/04 | 
 
 | **@Setter** | Permet d'injecter l'ID généré par Firebird dans l'objet |
 | **setScale(1)** | Normalise les décimales pour que equals() fonctionne |
 | **RETURNING NUM_PIE** | Firebird retourne l'ID généré directement sans 2e requête |
 | **executeQuery()** | Utilisé avec RETURNING car ça retourne un ResultSet |
+
+| **NEW** | 
+
+| **Pattern Decorator** | Envelopper un objet pour ajouter un comportement sans le modifier |
+| **CacheTypePieceDao** | Évite les requêtes SQL répétées — retourne depuis la mémoire |
+| **RETURN_GENERATED_KEYS** | Standard JDBC pour récupérer l'ID généré — portable sur toutes les BD |
+| **getGeneratedKeys()** | Récupère le ResultSet contenant l'ID auto-généré après executeUpdate() |
 
 
 ---
