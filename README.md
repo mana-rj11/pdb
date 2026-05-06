@@ -209,6 +209,14 @@ dao.getFromID(1)  /  dao.getListe(null)
 3. `SQLPieceDao.java` — `insert()` réécrit avec `RETURN_GENERATED_KEYS`
 4. Tests **6/6 ✓**
 
+### 10) Cours du 22 avril 2026
+**JavaFX — Conteneurs et contrôles**
+- Tous les Panes : HBox, VBox, FlowPane, GridPane, AnchorPane, StackPane, TilePane, ScrollPane, SplitPane
+- Tous les contrôles : Button, ToggleButton, RadioButton, TextField, ComboBox, TableView, DatePicker...
+- Streams Java : `stream()`, `filter()`, `forEach()`
+- Architecture FXML annoncée : Vue (.fxml) + Contrôleur (.java) + FXMLLoader
+- ⚠️ Imports : toujours `javafx...` jamais `java.awt...` ni `javax.swing...`
+
 ---
 
 ## ⚙️ Configuration requise
@@ -217,6 +225,14 @@ dao.getFromID(1)  /  dao.getListe(null)
 - JDK 25 ([jdk.java.net/25](https://jdk.java.net/25/))
 - JavaFX SDK 25 ([gluonhq.com/products/javafx](https://gluonhq.com/products/javafx/))
 - Serveur Firebird démarré
+- e(fx)clipse 3.8.0 (Eclipse Marketplace)
+- SceneBuilder → `C:\Users\nmana\AppData\Local\SceneBuilder\SceneBuilder.exe`
+
+
+### Eclipse Preferences → JavaFX
+```
+SceneBuilder executable : C:\Users\nmana\AppData\Local\SceneBuilder\SceneBuilder.exe
+JavaFX 11+ SDK          : C:\Program Files\Java\javafx-sdk-25.0.2\lib
 
 ### Fichier de connexion
 Créer `ressources/connexion.properties` :
@@ -268,6 +284,13 @@ Dans Eclipse :
 | **assertThrows** | Vérifie qu'une exception est bien levée dans les tests |
 | **OVERRIDING SYSTEM VALUE** | Impose un ID sur une colonne auto-incrémentée Firebird |
 | **Modulepath vs Classpath** | JavaFX et JUnit 5 doivent être sur le Modulepath |
+| **BorderPane** | 5 zones — Center grandit avec la fenêtre |
+| **FlowPane** | Queue leu leu — passe à la ligne si fenêtre réduite |
+| **AnchorPane** | Composants accrochés aux bordures |
+| **GridPane** | Grille fixe comme une calculatrice |
+| **_ Java 25** | Variable anonyme non utilisée |
+| **showAndWait()** | Pour les fenêtres modales |
+| **Ctrl+Shift+O** | Organise les imports dans Eclipse |
 
 | 08/04 | 
 
@@ -286,12 +309,15 @@ Dans Eclipse :
 
 ---
 
-## 🔜 Prochaines étapes.. (sûrement)
+## 🔜 Prochaines étapes.. (probablement)
 
 - [ ] Cahier de charges du projet reçu par le prof..?
-- [ ] IHM avec JavaFX + FXML
-- [ ] Couche Vue (contrôleurs FXML)
-- [ ] Connexion Vue ↔ DAO
+- [ ] FXMLLoader — charger une vue FXML
+- [ ] Contrôleur JavaFX — lier vue et logique
+- [ ] TextField numérique — validation des entrées
+- [ ] ComboBox — listes déroulantes
+- [ ] Nouveau domaine BD : TSVG, TAPPAREIL, TINSTALLATION, TELEMENT
+- [ ] Cahier des charges du projet (pas encore reçu)
 
 ---
 
