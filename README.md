@@ -219,6 +219,32 @@ dao.getFromID(1)  /  dao.getListe(null)
 
 ---
 
+## Exercices JavaFX réalisés
+
+### Exercice 1 — Découverte des conteneurs
+Fenêtre principale avec `BorderPane` + menu gauche `VBox` avec boutons de navigation.
+Chaque bouton charge dynamiquement un conteneur au centre :
+- `HBox` — composants côte à côte
+- `VBox` — composants empilés
+- `FlowPane` — passe à la ligne si fenêtre réduite
+- `StackPane` — composants empilés au centre
+- `AnchorPane` — accroché aux 4 bordures
+- `GridPane` — grille calculatrice fixe
+
+### Exercice 2 — Fenêtre Alert
+Bouton qui ouvre une `Alert.AlertType.CONFIRMATION` avec `showAndWait()`.
+- OK → `Platform.exit()` ferme l'application
+- Annuler → rien ne se passe
+- `initOwner()` lie l'Alert à la fenêtre principale
+
+### Exercice 3 — TextField numérique
+`TextField` avec `TextFormatter` qui filtre les caractères non numériques.
+- `matches("[0-9]*")` — regex qui accepte uniquement des chiffres
+- `textProperty().addListener()` — affiche la valeur en temps réel
+- Bouton "Afficher" → Alert avec la valeur saisie
+
+
+
 ## ⚙️ Configuration requise
 
 ### Prérequis
@@ -291,6 +317,11 @@ Dans Eclipse :
 | **_ Java 25** | Variable anonyme non utilisée |
 | **showAndWait()** | Pour les fenêtres modales |
 | **Ctrl+Shift+O** | Organise les imports dans Eclipse |
+| **TextFormatter** | Filtre les entrées d'un TextField en temps réel |
+| **matches("[0-9]*")** | Regex — accepte uniquement des chiffres |
+| **textProperty().addListener()** | Écoute chaque changement du texte |
+| **Alert.AlertType** | INFORMATION, WARNING, ERROR, CONFIRMATION |
+| **showAndWait()** | Bloque jusqu'à ce que l'utilisateur réponde |
 
 | 08/04 | 
 
