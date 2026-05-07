@@ -9,6 +9,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
@@ -41,29 +43,36 @@ public class Pdb2526 extends Application {
 		leftMenu.setAlignment(Pos.TOP_CENTER);
 		
 		
-		// Scene scene = new Scene(cp);
-		// scene.getStylesheets().add(getClass().getResource("pdb2526.css").toExternalForm());
-		// primaryStage.setScene(scene);
-		// primaryStage.setWidth(300);
-		// primaryStage.setHeight(200);
-		// primaryStage.show();
-		
 		Button btnHBox = new Button("HBox");
 		Button btnVBox = new Button("VBox");
 		Button btnFlow = new Button("FlowPane");
 		Button btnStack = new Button("StackPane");
 		Button btnAnchor = new Button("AnchorPane");
 		Button btnGrid = new Button("GridPane");
+		Button btnTextField = new Button("TextField");
+		Button btnAlert = new Button("Alert");
 		Button btnExit = new Button("EXIT");
+		
+		// Dans le menu gauche : ajoute après btnGrid
+		
+		btnAlert.setPrefWidth(100);
+		btnTextField.setPrefWidth(100);
+		// leftMenu.getChildren().add(btnAlert);
+				
+		// action : ajoute avec les autres actions
+		btnAlert.setOnAction(_ -> afficherAlert(primaryStage));
+		
 		
 		// largeur uniforme
 		for (Button b : new Button[] {btnHBox, btnVBox, btnFlow,
-										btnStack, btnAnchor, btnGrid, btnExit})
+										btnStack, btnAnchor, btnGrid, 
+										btnTextField, btnAlert, btnExit})
 			b.setPrefWidth(100);
 		
 		leftMenu.getChildren().addAll(
 			btnHBox, btnVBox, btnFlow,
-			btnStack, btnAnchor, btnGrid, btnExit
+			btnStack, btnAnchor, btnGrid, 
+			btnTextField, btnAlert, btnExit
 		);
 		cp.setLeft(leftMenu);
 		
@@ -77,6 +86,7 @@ public class Pdb2526 extends Application {
 		btnStack.setOnAction(_  -> cp.setCenter(creerStackPane()));
 		btnAnchor.setOnAction(_ -> cp.setCenter(creerAnchorPane()));
 		btnGrid.setOnAction(_   -> cp.setCenter(creerGridPane()));
+		btnTextField.setOnAction(_ -> cp.setCenter(creerTextFieldNumerique()));
 		btnExit.setOnAction(_   -> Platform.exit());
 		
 		// SCENE
@@ -88,15 +98,6 @@ public class Pdb2526 extends Application {
 		primaryStage.setHeight(450);
 		primaryStage.setTitle("Découverte des conteneurs JavaFX");
 		primaryStage.show();
-	
-		// Dans le menu gauche : ajoute après btnGrid
-		Button btnAlert = new Button("Alert");
-		btnAlert.setPrefWidth(100);
-		leftMenu.getChildren().add(btnAlert);
-		
-		// action : ajoute avec les autres actions
-		btnAlert.setOnAction(_ -> afficherAlert(primaryStage));
-		
 		
 	}
 	
@@ -136,7 +137,7 @@ public class Pdb2526 extends Application {
 		fond.setStyle("-fx-background-color: lightblue; -fx-padding: 40;");
 		Label dessus = new Label("DESSUS");
 		dessus.setStyle(
-			"-fx-background-color: rgba(255,100,100,0.7) -fx-padding: 15;");
+			"-fx-background-color: rgba(255,100,100,0.7); -fx-padding: 15;");
 		stack.getChildren().addAll(fond, dessus);
 		return stack;
 	}
@@ -173,6 +174,48 @@ public class Pdb2526 extends Application {
 				grid.add(btn, col, row);
 			}
 		return grid;
+	}
+	
+	private VBox creerTextFieldNumerique() {
+		VBox vbox = new VBox(15);
+		vbox.setPadding(new Insets(20));
+		vbox.setAlignment(Pos.CENTER);
+		
+		Label instruction = new Label("Entrez un nombre :");
+		
+		// TextField avec filtre numérique 
+		TextField tf = new TextField();
+		tf.setMaxWidth(150);
+		
+		// TextFormatter : filtre les caractères non numérique
+		tf.setTextFormatter(new TextFormatter<>(change -> {
+			String newText = change.getControlNewText();
+			if (newText.matches("[0-9]*")) // regew uniquement les chiffres
+				return change;			   // accepte le changement 
+			return null;				   // refuse le changement
+		}));
+		
+		// label qui affiche la valeur en temps réel
+		Label lblValeur = new Label("Valeur : ");
+		
+		// Listener sur le texte : se déclenche à chaque frappe
+		tf.textProperty().addListener((_, _, newVal) ->
+			lblValeur.setText("Valeur : " + (newVal.isEmpty() ? "vide" : newVal))
+		);
+		
+		// bouton pour afficher la valeur
+		Button btnAfficher = new Button("Afficher");
+		btnAfficher.setOnAction(_ -> {
+			Alert alert = new Alert(Alert.AlertType.INFORMATION);
+			alert.setTitle("Valeur saisie");
+			alert.setHeaderText(null);
+			alert.setContentText("Vous avez saisi : " +
+				(tf.getText().isEmpty() ? "rien !" : tf.getText()));
+			alert.showAndWait();
+		});
+		
+		vbox.getChildren().addAll(instruction, tf, lblValeur, btnAfficher);
+		return vbox;
 	}
 	
 	private void afficherAlert(Stage Owner) {
