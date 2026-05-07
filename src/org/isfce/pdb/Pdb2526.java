@@ -5,7 +5,9 @@ import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -86,6 +88,16 @@ public class Pdb2526 extends Application {
 		primaryStage.setHeight(450);
 		primaryStage.setTitle("Découverte des conteneurs JavaFX");
 		primaryStage.show();
+	
+		// Dans le menu gauche : ajoute après btnGrid
+		Button btnAlert = new Button("Alert");
+		btnAlert.setPrefWidth(100);
+		leftMenu.getChildren().add(btnAlert);
+		
+		// action : ajoute avec les autres actions
+		btnAlert.setOnAction(_ -> afficherAlert(primaryStage));
+		
+		
 	}
 	
 	// HBox
@@ -158,9 +170,26 @@ public class Pdb2526 extends Application {
 			for (int col = 0; col < touches[row].length; col++) {
 				Button btn = new Button(touches[row][col]);
 				btn.setPrefSize(60, 40);
-				grid.add(btn, row, col);
+				grid.add(btn, col, row);
 			}
 		return grid;
+	}
+	
+	private void afficherAlert(Stage Owner) {
+		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+		alert.setTitle("Confirmation");
+		alert.setHeaderText("Voulez-vous quitter ?");
+		alert.setContentText("L'application va se fermer.");
+		alert.initOwner(Owner); // lie l'alert à la fenêtre principale
+		
+		// showAndWait() attends la réponse avant de continuer 
+		var result = alert.showAndWait();
+		
+		// result est un Optionnal<ButtonType>
+		result.ifPresent(btn -> {
+			if (btn == ButtonType.OK)
+				Platform.exit();
+		});
 	}
 	
 
